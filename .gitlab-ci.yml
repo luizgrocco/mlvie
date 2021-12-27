@@ -18,7 +18,7 @@ build project:
     - yarn build
   artifacts:
     paths:
-      - /build
+      - build/
 
 deploy to netlify:
   stage: deploy
