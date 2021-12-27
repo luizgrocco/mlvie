@@ -16,6 +16,9 @@ build project:
   script:
     - yarn install
     - yarn build
+  artifacts:
+    paths:
+      - build/
 
 deploy to netlify:
   stage: deploy
