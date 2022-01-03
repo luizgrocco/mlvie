@@ -1,5 +1,9 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg"
+import "./App.css"
+
+const errorFunc = () => {
+  throw new Error("Errinho")
+}
 
 function App() {
   return (
@@ -17,9 +21,10 @@ function App() {
         >
           Learn React
         </a>
+        <button onClick={errorFunc}>Break the world</button>
       </header>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
