@@ -3,12 +3,12 @@ stages:
   - build
   - deploy
 
-test project:
-  stage: test
-  image: node:14.17.0
-  script:
-    - yarn install
-    - yarn test
+# test project:
+#   stage: test
+#   image: node:14.17.0
+#   script:
+#     - yarn install
+#     - yarn test
 
 lint:
   stage: test
