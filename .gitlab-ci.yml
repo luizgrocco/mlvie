@@ -10,6 +10,13 @@ test project:
     - yarn install
     - yarn test
 
+lint:
+  stage: test
+  script:
+    - yarn install
+    - yarn lint
+    - yarn prettier
+
 build project:
   stage: build
   image: node:14.17.0
