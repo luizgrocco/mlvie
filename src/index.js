@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals"
 import * as Sentry from "@sentry/react"
 import { Integrations } from "@sentry/tracing"
 
+// process.end.NODE_ENV === 'production' && Sentry.init...
 Sentry.init({
   dsn: "https://baf11e4883174345ab348377ad90ba6c@o1104608.ingest.sentry.io/6131873",
   integrations: [new Integrations.BrowserTracing()],
