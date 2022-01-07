@@ -12,6 +12,7 @@ stages:
 
 lint:
   stage: test
+  image: node:14.17.0
   script:
     - yarn install
     - yarn lint
