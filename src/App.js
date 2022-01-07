@@ -1,5 +1,6 @@
 import logo from "./logo.svg"
 import "./App.css"
+import * as Sentry from "@sentry/react"
 
 const errorFunc = () => {
   throw new Error("Errinho")
@@ -27,4 +28,4 @@ function App() {
   )
 }
 
-export default App
+export default Sentry.withProfiler(App)
