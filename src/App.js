@@ -2,10 +2,6 @@ import logo from "./logo.svg"
 import "./App.css"
 import * as Sentry from "@sentry/react"
 
-const errorFunc = () => {
-  throw new Error("Errinho")
-}
-
 function App() {
   return (
     <div className="App">
@@ -22,7 +18,6 @@ function App() {
         >
           Learn React
         </a>
-        <button onClick={errorFunc}>Break the world</button>
       </header>
     </div>
   )
