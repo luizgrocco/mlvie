@@ -1,6 +1,7 @@
-import logo from "./logo.svg"
-import "./App.css"
-import * as Sentry from "@sentry/react"
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import * as Sentry from "@sentry/react";
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         </a>
       </header>
     </div>
-  )
+  );
 }
 
-export default Sentry.withProfiler(App)
+export default Sentry.withProfiler(App);
