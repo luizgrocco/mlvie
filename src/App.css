@@ -3,7 +3,7 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 30vmin;
   pointer-events: none;
 }
 
@@ -35,4 +35,9 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+button {
+  width: 200px;
+  height: 40px;
 }
