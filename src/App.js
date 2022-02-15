@@ -1,5 +1,4 @@
 import React, { useRef } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 import * as Sentry from "@sentry/react";
 import * as tf from "@tensorflow/tfjs";
@@ -20,42 +19,52 @@ import CanvasDraw from "react-canvas-draw";
 // };
 
 function App() {
-  const canvas = useRef(null);
+  const canvasDraw = useRef(null);
 
   const handleClear = () => {
-    canvas.current.clear();
+    canvasDraw.current.clear();
   };
 
   const handleSaveData = () => {
-    const ctx = canvas.current.canvas.drawing.getContext("2d");
-    const img = ctx.getImageData(0, 0, 30, 30);
-    const imgTensor = tf.browser.fromPixels(img);
-    console.log(imgTensor);
+    const imgTensor = tf.browser.fromPixels(
+      canvasDraw.current.canvas.drawing,
+      4
+    );
+    // console.log(imgTensor.dataSync());
+    tf.browser.toPixels(
+      tf.image.resizeNearestNeighbor(imgTensor, [30, 30]).cast("int32"),
+      document.getElementsByClassName("secondary-canvas")[0]
+    );
+    tf.browser.toPixels(
+      tf.image.resizeNearestNeighbor(imgTensor, [30, 30]).cast("int32"),
+      document.getElementsByClassName("secondary-canvas")[1]
+    );
+    // const test2 = tf.browser.fromPixels(document.getElementById("canvas2"), 4);
+    // console.log(test2.dataSync());
   };
 
   const printProps = () => {
-    console.log(canvas);
+    console.log(canvasDraw);
   };
 
   return (
     <div className="App">
       <header className="App-header">
-        <CanvasDraw ref={canvas} hideGrid lazyRadius={0} catenaryColor="#444" />
+        <div style={{ border: "5px solid orange" }}>
+          <CanvasDraw
+            ref={canvasDraw}
+            hideGrid
+            lazyRadius={0}
+            catenaryColor="#444"
+          />
+        </div>
+        <div style={{ display: "flex" }}>
+          <canvas className="secondary-canvas"></canvas>
+          <canvas className="secondary-canvas"></canvas>
+        </div>
         <button onClick={handleClear}>Clear</button>
         <button onClick={handleSaveData}>Save Data</button>
         <button onClick={printProps}>Print Props</button>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );

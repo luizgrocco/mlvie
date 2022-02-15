@@ -41,3 +41,10 @@ button {
   width: 200px;
   height: 40px;
 }
+
+.secondary-canvas {
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  border: 5px solid gray;
+}
