@@ -1,7 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import "./App.css";
 import * as Sentry from "@sentry/react";
 import * as tf from "@tensorflow/tfjs";
+import { useDebounce } from "react-use";
 import CanvasDraw from "react-canvas-draw";
 
 // const canvasProps = {
@@ -19,133 +20,135 @@ import CanvasDraw from "react-canvas-draw";
 // };
 
 function App() {
-  const [model, setModel] = useState();
+  const [model, setModel] = useState(null);
   const canvasDraw = useRef(null);
+  const [predictionValue, setPredictionValue] = useState(null);
+  const [image, setImage] = useState(null);
 
+  // Handlers
   const handleClear = () => {
     canvasDraw.current.clear();
   };
 
-  const loadModel = async () => {
-    // const uploadJSONInput = document.getElementById("upload-json");
-    // const uploadWeightsInput = document.getElementById("upload-weights");
-    // console.log(uploadJSONInput.files);
+  const handleDraw = () => {
+    // Convert the canvas pixels to a Tensor of the model's input shape
+    let imgTensor = tf.browser.fromPixels(canvasDraw.current.canvas.drawing, 1);
+    imgTensor = tf.image.resizeNearestNeighbor(imgTensor, [28, 28]);
+    imgTensor = imgTensor.reshape([-1, 28, 28, 1]);
+    imgTensor = tf.cast(imgTensor, "float32");
+    imgTensor = tf.div(imgTensor, tf.scalar(255));
+    setImage(imgTensor);
+  };
+
+  const loadModel = useCallback(async () => {
     try {
-      // const model = await tf.loadLayersModel(
-      //   tf.io.browserFiles([
-      //     uploadJSONInput.files[0],
-      //     ...uploadWeightsInput.files,
-      //   ])
-      // );
       const model = await tf.loadLayersModel(
         // eslint-disable-next-line no-undef
-        process.env.PUBLIC_URL + "/assets/model.json"
+        process.env.PUBLIC_URL + "/assets/models/model.json"
       );
       setModel(model);
-      console.log("set loaded Model");
-      console.log(model);
+      console.log("Model Loaded.");
+      // console.log(model);
     } catch (e) {
       console.log("Failed to load model! Error: ", e);
     }
-  };
+  }, []);
 
-  const predict = async () => {
+  const predict = useCallback(async () => {
     await tf.tidy(() => {
-      // Convert the canvas pixels to a Tensor of the matching shape
-      let imgTensor = tf.browser.fromPixels(
-        canvasDraw.current.canvas.drawing,
-        1
-      );
-      imgTensor = tf.image.resizeNearestNeighbor(imgTensor, [28, 28]);
-      imgTensor = imgTensor.reshape([1, 28, 28, 1]);
-      imgTensor = tf.cast(imgTensor, "float32");
-      // imgTensor = tf.div(imgTensor, tf.scalar(255));
-      imgTensor.print();
-      console.log(model);
-
-      // Make and format the predications
-      const output = model.predict(imgTensor);
-
-      // Save predictions on the component
-      console.log(Array.from(output.dataSync()));
+      // Make and format predictions
+      const output = model.predict(image);
+      const outputArray = Array.from(output.dataSync());
+      const prediction = Math.max(...outputArray);
+      setPredictionValue(outputArray.indexOf(prediction));
     });
-  };
+  }, [model, image]);
 
-  // useEffect(() => {
-  //   tf.ready().then(() => {
-  //     loadModel();
-  //   });
-  // }, []);
+  useEffect(() => {
+    tf.ready().then(() => {
+      loadModel();
+    });
+  }, [loadModel]);
 
-  // const predict = async (imageData) => {
-  //   const pred = await tf.tidy(() => {
-  //     // Convert the canvas pixels to
-  //     let img = tf.fromPixels(imageData, 1);
-  //     img = img.reshape([1, 28, 28, 1]);
-  //     img = tf.cast(img, "float32");
+  useDebounce(
+    () => {
+      if (model && image) predict();
+    },
+    1000,
+    [image]
+  );
 
-  //     // Make and format the predications
-  //     const output = this.model.predict(img);
-
-  //     // Save predictions on the component
-  //     this.predictions = Array.from(output.dataSync());
-  //   });
-  // };
-
-  const handleSaveData = () => {
+  const handlePreviewData = () => {
     const imgTensor = tf.browser.fromPixels(
       canvasDraw.current.canvas.drawing,
       1
     );
-
-    // imgTensor.print(true);
-    // console.log(
-    //   tf.image.resizeNearestNeighbor(imgTensor, [28, 28]).cast("int32")
-    // );
-    // console.log(imgTensor.dataSync());
     tf.browser.toPixels(
       tf.image
-        .resizeNearestNeighbor(imgTensor, [28, 28])
+        .resizeBilinear(imgTensor, [28, 28])
+        // .resizeNearestNeighbor(imgTensor, [28, 28])
         .cast("float32")
         .div(tf.scalar(255)),
       document.getElementsByClassName("secondary-canvas")[0]
-    );
-    tf.browser.toPixels(
-      tf.image
-        .resizeNearestNeighbor(imgTensor, [28, 28])
-        .cast("float32")
-        .div(tf.scalar(255)),
-      document.getElementsByClassName("secondary-canvas")[1]
     );
     // const test2 = tf.browser.fromPixels(document.getElementById("canvas2"), 4);
     // console.log(test2.dataSync());
   };
 
-  const printProps = () => {
-    console.log(canvasDraw);
-  };
+  // const printProps = () => {
+  //   console.log(canvasDraw);
+  // };
 
   return (
     <div className="App">
       <header className="App-header">
-        <div style={{ border: "5px solid orange" }}>
-          <CanvasDraw
-            ref={canvasDraw}
-            hideGrid
-            lazyRadius={0}
-            catenaryColor="#444"
-          />
+        <div className="canvases-container">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <div style={{ border: "5px solid orange" }}>
+              <CanvasDraw
+                ref={canvasDraw}
+                hideGrid
+                lazyRadius={0}
+                // catenaryColor="#FFF"
+                brushColor="#FFF"
+                backgroundColor="#000"
+                onChange={handleDraw}
+              />
+            </div>
+            <button onClick={handleClear}>Clear</button>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              marginLeft: "50px",
+            }}
+          >
+            <button
+              onClick={handlePreviewData}
+              style={{ marginBottom: "15px" }}
+            >
+              Pré-visualizar
+            </button>
+            <canvas className="secondary-canvas"></canvas>
+          </div>
         </div>
-        <div style={{ display: "flex" }}>
-          <canvas className="secondary-canvas"></canvas>
-          <canvas className="secondary-canvas"></canvas>
-        </div>
-        <div style={{ display: "flex" }}>
-          <button onClick={handleClear}>Clear</button>
-          <button onClick={handleSaveData}>Save Data</button>
-          <button onClick={printProps}>Print Props</button>
-          <button onClick={predict}>Predict!</button>
-        </div>
+
+        <input
+          readOnly
+          className="prediction"
+          value={predictionValue === null ? "N/A" : predictionValue}
+          style={{ border: "5px solid orange" }}
+        />
+
         {/* <div style={{ display: "flex" }}>
           <button onClick={loadModel}>Load Model</button>
           <input type="file" id="upload-json" />

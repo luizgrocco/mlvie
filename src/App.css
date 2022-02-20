@@ -48,3 +48,17 @@ button {
   background-color: white;
   border: 5px solid gray;
 }
+
+.canvases-container {
+  display: flex;
+  align-items: center;
+}
+
+.prediction {
+  width: 200px;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 100px;
+  color: black;
+  background-color: #282c34;
+}
