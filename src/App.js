@@ -24,6 +24,7 @@ function App() {
   const canvasDraw = useRef(null);
   const [predictionValue, setPredictionValue] = useState(null);
   const [image, setImage] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Handlers
   const handleClear = () => {
@@ -44,7 +45,7 @@ function App() {
     try {
       const model = await tf.loadLayersModel(
         // eslint-disable-next-line no-undef
-        process.env.PUBLIC_URL + "/assets/models/model.json"
+        process.env.PUBLIC_URL + "/assets/models/my-model/model.json"
       );
       setModel(model);
       console.log("Model Loaded.");
@@ -102,6 +103,16 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <div className="header-container">
+          <img src="assets/images/tagview_logo.webp" alt="tagview-logo" />
+          <div className="meets">meets</div>
+          <img
+            src="assets/images/tensorflow-01.png"
+            alt="tensorflow-logo+text"
+            width={150}
+            height={150}
+          />
+        </div>
         <div className="canvases-container">
           <div
             style={{
@@ -123,37 +134,24 @@ function App() {
             </div>
             <button onClick={handleClear}>Clear</button>
           </div>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              marginLeft: "50px",
-            }}
-          >
-            <button
-              onClick={handlePreviewData}
-              style={{ marginBottom: "15px" }}
-            >
-              Pré-visualizar
-            </button>
+          <div className="prep-data-container">
+            <button onClick={handlePreviewData}>Pré-visualizar</button>
             <canvas className="secondary-canvas"></canvas>
           </div>
         </div>
-
-        <input
-          readOnly
-          className="prediction"
-          value={predictionValue === null ? "N/A" : predictionValue}
-          style={{ border: "5px solid orange" }}
-        />
-
-        {/* <div style={{ display: "flex" }}>
-          <button onClick={loadModel}>Load Model</button>
-          <input type="file" id="upload-json" />
-          <input type="file" multiple id="upload-weights" />
-        </div> */}
+        <div className="prediction-container">
+          <img
+            src="assets/images/tensorflow_logo.png"
+            alt="tensorflow-logo"
+            width="50"
+            height="50"
+          />
+          <input
+            readOnly
+            className="prediction"
+            value={predictionValue === null ? "N/A" : predictionValue}
+          />
+        </div>
       </header>
     </div>
   );
