@@ -1,50 +1,25 @@
+body {
+  background-color: #282c34;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .App {
   text-align: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
-}
-
-button {
-  width: 100px;
-  height: 40px;
-}
-
-.canvases-container {
-  display: flex;
-  align-items: center;
-}
-
-.secondary-canvas {
-  width: 200px;
-  height: 200px;
-  background-color: white;
-  border: 5px solid gray;
-  margin-top: 15px;
-}
-
-.prediction-container {
-  display: flex;
-  flex-direction: column;
-}
-
-.prediction {
-  /* width: 200px;
-  width: fit-content; */
-  text-align: center;
-  margin-top: 20px;
-  font-size: 100px;
-  color: black;
-  background-color: #282c34;
-  border: 5px solid orange;
 }
 
 .header-container {
@@ -59,10 +34,57 @@ button {
   margin-right: 20px;
 }
 
-.prep-data-container {
+.canvases-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.drawing-canvas {
+  border: 5px solid orange;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+}
+
+.pre-processing-canvas {
   margin-left: 50px;
+  width: 200px;
+  height: 200px;
+  background-color: black;
+  border: 5px solid orange;
+  margin-top: 15px;
+}
+
+.prediction-container {
+  margin-top: 10px;
+}
+
+.prediction {
+  width: 200px;
+  text-align: center;
+  margin-top: 20px;
+  font-size: 100px;
+  color: black;
+  background-color: #282c34;
+  border: 5px solid orange;
+}
+
+.flex {
+  color: orange;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.predict {
+  margin-left: 10px;
+  color: orange;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.circular-progress {
+  margin-top: 10px;
+  margin-left: 10px;
 }
