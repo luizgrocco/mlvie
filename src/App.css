@@ -57,7 +57,7 @@ body {
 }
 
 .prediction-container {
-  margin-top: 10px;
+  margin-top: 100px;
 }
 
 .prediction {
@@ -74,17 +74,18 @@ body {
   color: orange;
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-end;
 }
 
 .predict {
-  margin-left: 10px;
+  margin-left: 5px;
   color: orange;
   font-size: 18px;
   font-weight: 700;
+  text-shadow: 2px 2px black;
 }
 
 .circular-progress {
   margin-top: 10px;
-  margin-left: 10px;
+  margin-left: 15px;
 }
