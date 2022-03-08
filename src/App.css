@@ -1,6 +1,6 @@
 body {
   background-color: #282c34;
-  flex-direction: column;
+  flex-direction: column !important;
   align-items: center;
   justify-content: center;
 }
@@ -9,13 +9,13 @@ body {
   text-align: center;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: column !important;
   align-items: center;
 }
 
 .App-header {
   background-color: #282c34;
-  flex-direction: column;
+  flex-direction: column !important;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
@@ -30,8 +30,9 @@ body {
 
 .meets {
   color: orange;
-  margin-left: 20px;
-  margin-right: 20px;
+  font-size: 20px !important;
+  margin-left: 20px !important;
+  margin-right: 20px !important;
 }
 
 .canvases-container {
@@ -43,7 +44,7 @@ body {
 .drawing-canvas {
   border: 5px solid orange;
   display: flex;
-  flex-direction: column;
+  flex-direction: column !important;
   align-items: center;
 }
 
@@ -57,28 +58,25 @@ body {
 }
 
 .prediction-container {
-  margin-top: 100px;
+  display: flex;
+  flex-direction: column !important;
+  margin-top: 50px;
 }
 
-.prediction {
-  width: 200px;
-  text-align: center;
-  margin-top: 20px;
-  font-size: 100px;
-  color: black;
-  background-color: #282c34;
-  border: 5px solid orange;
-}
-
-.flex {
+.prediction-header {
   color: orange;
   display: flex;
   justify-content: flex-start;
   align-items: flex-end;
 }
 
+.tf-logo {
+  width: 50px;
+  height: 50px;
+}
+
 .predict {
-  margin-left: 5px;
+  margin-left: 15px !important;
   color: orange;
   font-size: 18px;
   font-weight: 700;
@@ -88,4 +86,52 @@ body {
 .circular-progress {
   margin-top: 10px;
   margin-left: 15px;
+}
+
+.prediction-rank {
+  display: flex;
+  margin-top: 20px;
+}
+
+.prediction-winner-container {
+  padding-top: 8px;
+  border: 5px solid orange;
+  width: 150px;
+}
+
+.prediction-winner {
+  text-align: center;
+  font-size: 75px !important;
+  color: black;
+}
+
+.prediction-losers {
+  display: flex;
+  flex-direction: column !important;
+}
+
+.rank-one .MuiBadge-badge {
+  color: gold;
+}
+
+.rank-two .MuiBadge-badge {
+  color: silver;
+}
+
+.rank-three .MuiBadge-badge {
+  color: #cd7f32;
+}
+
+.loser-text {
+  margin-left: 16px !important;
+  font-size: 30px !important;
+}
+
+.loser-container {
+  flex: 1;
+  align-items: center;
+  border: 5px solid orange;
+  border-left: 2px;
+  display: flex;
+  padding: 8px;
 }

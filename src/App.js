@@ -4,7 +4,9 @@ import * as Sentry from "@sentry/react";
 import * as tf from "@tensorflow/tfjs";
 import { useDebounce } from "react-use";
 import CanvasDraw from "react-canvas-draw";
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Typography, Badge, Grid } from "@mui/material";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import { Box } from "@mui/system";
 
 // const canvasProps = {
 //   color: "#ffc600",
@@ -24,6 +26,9 @@ function App() {
   const [model, setModel] = useState(null);
   const canvasDraw = useRef(null);
   const [predictionValue, setPredictionValue] = useState(null);
+  const [rankTwoPrediction, setRankTwoPrediction] = useState(null);
+  const [rankThreePrediction, setRankThreePrediction] = useState(null);
+
   const [image, setImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -47,9 +52,15 @@ function App() {
   const predict = useCallback(async () => {
     await tf.tidy(() => {
       const output = model.predict(image);
-      const outputArray = Array.from(output.dataSync());
-      const prediction = Math.max(...outputArray);
-      setPredictionValue(outputArray.indexOf(prediction));
+      const outputArray = Array.from(output.dataSync())
+        .map((el, index) => ({
+          number: index,
+          confidence: el,
+        }))
+        .sort((a, b) => b.confidence - a.confidence);
+      setPredictionValue(outputArray[0].number);
+      setRankTwoPrediction(outputArray[1].number);
+      setRankThreePrediction(outputArray[2].number);
     });
     const imgTensor = tf.browser.fromPixels(
       canvasDraw.current.canvas.drawing,
@@ -70,7 +81,6 @@ function App() {
     const loadModel = async () => {
       try {
         const model = await tf.loadLayersModel(
-          // eslint-disable-next-line no-undef
           process.env.PUBLIC_URL + "/assets/models/my-model/model.json"
         );
         setModel(model);
@@ -97,21 +107,21 @@ function App() {
   );
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <div className="header-container">
+    <Grid className="App">
+      <Grid className="App-header">
+        <Grid className="header-container">
           <img src="assets/images/tagview_logo.webp" alt="tagview-logo" />
-          <span className="meets">meets</span>
+          <Typography className="meets">meets</Typography>
           <img
             src="assets/images/tensorflow-01.png"
             alt="tensorflow-logo+text"
             width={150}
             height={150}
           />
-        </div>
-      </header>
-      <div className="canvases-container">
-        <div className="drawing-canvas">
+        </Grid>
+      </Grid>
+      <Grid className="canvases-container">
+        <Grid className="drawing-canvas">
           <CanvasDraw
             ref={canvasDraw}
             hideGrid
@@ -120,29 +130,52 @@ function App() {
             backgroundColor="#000"
             onChange={handleDraw}
           />
-        </div>
+        </Grid>
         <canvas className="pre-processing-canvas"></canvas>
-      </div>
-      <div className="prediction-container">
-        <div className="flex">
-          <img
+      </Grid>
+      <Grid className="prediction-container">
+        <Grid className="prediction-header">
+          <Box
+            component="img"
             src="assets/images/tensorflow_logo.png"
             alt="tensorflow-logo"
-            width="50"
-            height="50"
+            className="tf-logo"
           />
-          <span className="predict">Prediction:</span>
+          <Typography className="predict">Prediction:</Typography>
           {isLoading && (
             <CircularProgress className="circular-progress" color="inherit" />
           )}
-        </div>
-        <input
-          readOnly
-          className="prediction"
-          value={predictionValue === null ? "N/A" : predictionValue}
-        />
-      </div>
-    </div>
+        </Grid>
+        <Grid className="prediction-rank">
+          <Grid className="prediction-winner-container">
+            <Badge badgeContent={1} className="rank-one">
+              <EmojiEventsIcon sx={{ color: "gold" }} />
+            </Badge>
+            <Typography className="prediction-winner">
+              {predictionValue === null ? "N/A" : predictionValue}
+            </Typography>
+          </Grid>
+          <Grid className="prediction-losers">
+            <Grid className="loser-container">
+              <Badge badgeContent={2} className="rank-two">
+                <EmojiEventsIcon sx={{ color: "silver" }} />
+              </Badge>
+              <Typography className="loser-text">
+                {rankTwoPrediction === null ? "N/A" : rankTwoPrediction}
+              </Typography>
+            </Grid>
+            <Grid className="loser-container">
+              <Badge badgeContent={3} className="rank-three">
+                <EmojiEventsIcon sx={{ color: "#CD7F32" }} />
+              </Badge>
+              <Typography className="loser-text">
+                {rankThreePrediction === null ? "N/A" : rankThreePrediction}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
