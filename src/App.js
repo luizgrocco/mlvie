@@ -28,24 +28,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
 
   // Handlers
-  const handleClear = () => {
-    canvasDraw.current.clear();
-  };
-
-  const handlePreviewData = () => {
-    const imgTensor = tf.browser.fromPixels(
-      canvasDraw.current.canvas.drawing,
-      1
-    );
-    tf.browser.toPixels(
-      tf.image
-        .resizeBilinear(imgTensor, [28, 28])
-        .cast("float32")
-        .div(tf.scalar(255)),
-      document.getElementsByClassName("pre-processing-canvas")[0]
-    );
-  };
-
   const handleDraw = () => {
     // Convert the canvas pixels to a Tensor of the model's input shape
     let imgTensor = tf.browser.fromPixels(canvasDraw.current.canvas.drawing, 1);
@@ -62,20 +44,6 @@ function App() {
   // };
 
   // Hooks
-
-  // const loadModel = useCallback(async () => {
-  //   try {
-  //     const model = await tf.loadLayersModel(
-  //       // eslint-disable-next-line no-undef
-  //       process.env.PUBLIC_URL + "/assets/models/my-model/model.json"
-  //     );
-  //     setModel(model);
-  //     console.log("Model Loaded.");
-  //   } catch (e) {
-  //     console.log("Failed to load model! Error: ", e);
-  //   }
-  // }, []);
-
   const predict = useCallback(async () => {
     await tf.tidy(() => {
       const output = model.predict(image);
@@ -83,8 +51,18 @@ function App() {
       const prediction = Math.max(...outputArray);
       setPredictionValue(outputArray.indexOf(prediction));
     });
-    handlePreviewData();
-    handleClear();
+    const imgTensor = tf.browser.fromPixels(
+      canvasDraw.current.canvas.drawing,
+      1
+    );
+    tf.browser.toPixels(
+      tf.image
+        .resizeBilinear(imgTensor, [28, 28])
+        .cast("float32")
+        .div(tf.scalar(255)),
+      document.getElementsByClassName("pre-processing-canvas")[0]
+    );
+    canvasDraw.current.clear();
     setIsLoading(false);
   }, [model, image]);
 
