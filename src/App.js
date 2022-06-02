@@ -8,20 +8,6 @@ import { CircularProgress, Typography, Badge, Grid } from "@mui/material";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { Box } from "@mui/system";
 
-// const canvasProps = {
-//   color: "#ffc600",
-//   width: 400,
-//   height: 400,
-//   brushRadius: 10,
-//   lazyRadius: 12,
-//   backgroundImg:
-//     "https://upload.wikimedia.org/wikipedia/commons/a/a1/Nepalese_Mhapuja_Mandala.jpg",
-//   imgs: [
-//     "https://upload.wikimedia.org/wikipedia/commons/a/a1/Nepalese_Mhapuja_Mandala.jpg",
-//     "https://i.imgur.com/a0CGGVC.jpg",
-//   ],
-// };
-
 function App() {
   const [model, setModel] = useState(null);
   const canvasDraw = useRef(null);
@@ -43,10 +29,6 @@ function App() {
     setImage(imgTensor);
     setIsLoading(true);
   };
-
-  // const handlePrintProps = () => {
-  //   console.log(canvasDraw);
-  // };
 
   // Hooks
   const predict = useCallback(async () => {
