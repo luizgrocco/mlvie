@@ -8,6 +8,7 @@
     "@fontsource/roboto": "^4.5.3",
     "@mui/icons-material": "^5.5.0",
     "@mui/material": "^5.4.4",
+    "@react-three/drei": "^9.11.3",
     "@react-three/fiber": "^8.0.19",
     "@sentry/react": "^6.16.1",
     "@sentry/tracing": "^6.16.1",
