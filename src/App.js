@@ -3,7 +3,7 @@ import "./App.css";
 import * as Sentry from "@sentry/react";
 
 import { MachineLearning, ThreeJS } from "./components";
-import { Drawer, Box, AppBar } from "@mui/material";
+import { Drawer, Box, AppBar, Toolbar } from "@mui/material";
 
 function App() {
   return (
@@ -16,8 +16,10 @@ function App() {
     >
       <AppBar
         position="fixed"
-        sx={{ width: `calc(100% - ${240}px)`, ml: `${240}px` }}
-      />
+        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      >
+        <Toolbar sx={{ backgroundColor: "#282c34" }} />
+      </AppBar>
       <Drawer
         variant="permanent"
         anchor="left"
@@ -27,10 +29,23 @@ function App() {
           [`& .MuiDrawer-paper`]: {
             width: 240,
             boxSizing: "border-box",
-            backgroundColor: "#282c34",
+            backgroundColor: "#000000",
           },
         }}
+        // sx={{
+        //   width: 240,
+        //   flexShrink: 0,
+        //   [`& .MuiDrawer-paper`]: {
+        //     width: 240,
+        //     boxSizing: "border-box",
+        //     backgroundColor: "#282c34",
+        //   },
+        // }}
       />
+      <Box sx={{ display: "flex", flex: "1 1 auto", flexDirection: "column" }}>
+        <Toolbar sx={{ backgroundColor: "#282c34" }} />
+        <MachineLearning />
+      </Box>
     </Box>
   );
 }
