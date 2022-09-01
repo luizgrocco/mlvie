@@ -6,7 +6,7 @@ export const Cubie = ({ ...props }) => {
   const cubieRef = useRef();
   const [hovered, hover] = useState(false);
 
-  // console.log("cubie was re-rendered");
+  console.log("cubie was re-rendered");
 
   return (
     <Box

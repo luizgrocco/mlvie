@@ -19,15 +19,28 @@ export const ThreeJS = () => {
   const [cubeDimension, setCubeDimension] = useState(1);
   const [cubeSpacing, setCubeSpacing] = useState(0);
   const cameraRef = useRef();
+  const cubeRef = useRef();
 
   const onChangeCubeDimension = (_event, dimension) => {
     if (typeof dimension === "number") {
       setCubeDimension(dimension);
+      setCubeSpacing(0);
     }
   };
 
   const onChangeSpacing = (_event, spacing) => {
-    if (typeof spacing === "number") setCubeSpacing(spacing);
+    if (typeof spacing === "number") {
+      const adjustedSpacing = 1 + spacing / 50;
+      const adjustedCubeSpacing = 1 + cubeSpacing / 50;
+      cubeRef.current.children?.forEach((cubie) => {
+        cubie.position.set(
+          (cubie.position.x / adjustedCubeSpacing) * adjustedSpacing,
+          (cubie.position.y / adjustedCubeSpacing) * adjustedSpacing,
+          (cubie.position.z / adjustedCubeSpacing) * adjustedSpacing
+        );
+      });
+      setCubeSpacing(spacing);
+    }
   };
 
   const onClickResetCamera = () => {
@@ -81,7 +94,7 @@ export const ThreeJS = () => {
           makeDefault
           position={DEFAULT_CAMERA_POSITION}
           near={0.1}
-          far={15}
+          far={25}
           ref={cameraRef}
         />
         <OrbitControls />
@@ -89,11 +102,7 @@ export const ThreeJS = () => {
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
         <pointLight position={[-10, -10, -10]} />
 
-        <Cube
-          position={[0, 0, 0]}
-          dimension={cubeDimension}
-          spacing={cubeSpacing}
-        />
+        <Cube position={[0, 0, 0]} dimension={cubeDimension} ref={cubeRef} />
       </Canvas>
     </>
   );
