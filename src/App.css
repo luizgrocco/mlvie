@@ -1,20 +1,19 @@
 body {
-  background-color: #282c34;
+  background-color: #1a1a1a;
   flex-direction: column !important;
   align-items: center;
   justify-content: center;
 }
 
 .App {
+  width: 100%;
   text-align: center;
-  min-height: 100vh;
   display: flex;
   flex-direction: column !important;
   align-items: center;
 }
 
 .App-header {
-  background-color: #282c34;
   flex-direction: column !important;
   align-items: center;
   justify-content: center;
@@ -110,21 +109,10 @@ body {
   flex-direction: column !important;
 }
 
-.rank-one .MuiBadge-badge {
-  color: gold;
-}
-
-.rank-two .MuiBadge-badge {
-  color: silver;
-}
-
-.rank-three .MuiBadge-badge {
-  color: #cd7f32;
-}
-
 .loser-text {
   margin-left: 16px !important;
   font-size: 30px !important;
+  color: black;
 }
 
 .loser-container {
