@@ -31,6 +31,10 @@ export const MachineLearning = () => {
   // Hooks
   const predict = useCallback(async () => {
     await tf.tidy(() => {
+      if (!model) {
+        setIsLoading(false);
+        return;
+      }
       const output = model.predict(image);
       const outputArray = Array.from(output.dataSync())
         .map((el, index) => ({
@@ -128,7 +132,7 @@ export const MachineLearning = () => {
         </Grid>
         <Grid className="prediction-rank">
           <Grid className="prediction-winner-container">
-            <Badge badgeContent={1} className="rank-one">
+            <Badge badgeContent={1} sx={{ color: "gold" }}>
               <EmojiEventsIcon sx={{ color: "gold" }} />
             </Badge>
             <Typography className="prediction-winner">
@@ -137,7 +141,7 @@ export const MachineLearning = () => {
           </Grid>
           <Grid className="prediction-losers">
             <Grid className="loser-container">
-              <Badge badgeContent={2} className="rank-two">
+              <Badge badgeContent={2} sx={{ color: "silver" }}>
                 <EmojiEventsIcon sx={{ color: "silver" }} />
               </Badge>
               <Typography className="loser-text">
@@ -145,7 +149,7 @@ export const MachineLearning = () => {
               </Typography>
             </Grid>
             <Grid className="loser-container">
-              <Badge badgeContent={3} className="rank-three">
+              <Badge badgeContent={3} sx={{ color: "#CD7F32" }}>
                 <EmojiEventsIcon sx={{ color: "#CD7F32" }} />
               </Badge>
               <Typography className="loser-text">

@@ -1,2 +1,2 @@
 export * from "./MachineLearning/MachineLearning";
-// export * from "./ThreeJS/ThreeJS";
+export * from "./ThreeJS/ThreeJS";
