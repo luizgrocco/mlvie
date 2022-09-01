@@ -1,6 +1,4 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import "./App.css";
-import * as Sentry from "@sentry/react";
 import * as tf from "@tensorflow/tfjs";
 import { useDebounce } from "react-use";
 import CanvasDraw from "react-canvas-draw";
@@ -8,21 +6,7 @@ import { CircularProgress, Typography, Badge, Grid } from "@mui/material";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { Box } from "@mui/system";
 
-// const canvasProps = {
-//   color: "#ffc600",
-//   width: 400,
-//   height: 400,
-//   brushRadius: 10,
-//   lazyRadius: 12,
-//   backgroundImg:
-//     "https://upload.wikimedia.org/wikipedia/commons/a/a1/Nepalese_Mhapuja_Mandala.jpg",
-//   imgs: [
-//     "https://upload.wikimedia.org/wikipedia/commons/a/a1/Nepalese_Mhapuja_Mandala.jpg",
-//     "https://i.imgur.com/a0CGGVC.jpg",
-//   ],
-// };
-
-function App() {
+export const MachineLearning = () => {
   const [model, setModel] = useState(null);
   const canvasDraw = useRef(null);
   const [predictionValue, setPredictionValue] = useState(null);
@@ -44,13 +28,13 @@ function App() {
     setIsLoading(true);
   };
 
-  // const handlePrintProps = () => {
-  //   console.log(canvasDraw);
-  // };
-
   // Hooks
   const predict = useCallback(async () => {
     await tf.tidy(() => {
+      if (!model) {
+        setIsLoading(false);
+        return;
+      }
       const output = model.predict(image);
       const outputArray = Array.from(output.dataSync())
         .map((el, index) => ({
@@ -148,7 +132,7 @@ function App() {
         </Grid>
         <Grid className="prediction-rank">
           <Grid className="prediction-winner-container">
-            <Badge badgeContent={1} className="rank-one">
+            <Badge badgeContent={1} sx={{ color: "gold" }}>
               <EmojiEventsIcon sx={{ color: "gold" }} />
             </Badge>
             <Typography className="prediction-winner">
@@ -157,7 +141,7 @@ function App() {
           </Grid>
           <Grid className="prediction-losers">
             <Grid className="loser-container">
-              <Badge badgeContent={2} className="rank-two">
+              <Badge badgeContent={2} sx={{ color: "silver" }}>
                 <EmojiEventsIcon sx={{ color: "silver" }} />
               </Badge>
               <Typography className="loser-text">
@@ -165,7 +149,7 @@ function App() {
               </Typography>
             </Grid>
             <Grid className="loser-container">
-              <Badge badgeContent={3} className="rank-three">
+              <Badge badgeContent={3} sx={{ color: "#CD7F32" }}>
                 <EmojiEventsIcon sx={{ color: "#CD7F32" }} />
               </Badge>
               <Typography className="loser-text">
@@ -177,6 +161,4 @@ function App() {
       </Grid>
     </Grid>
   );
-}
-
-export default Sentry.withProfiler(App);
+};
