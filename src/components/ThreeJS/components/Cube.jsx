@@ -2,11 +2,34 @@
 import { useFrame } from "@react-three/fiber";
 import React, { forwardRef } from "react";
 import { useMemo } from "react";
+import { BoxGeometry, MeshLambertMaterial } from "three";
 import { Cubie } from "../components";
 
 const RubikCube = ({ position = [0, 0, 0], dimension = 1 }, cubeRef) => {
   console.log("Cube was re-rendered");
   const axisLimit = useMemo(() => (dimension - 1) / 2, [dimension]);
+
+  const boxGeometry = useMemo(() => {
+    const geometry = new BoxGeometry(1, 1, 1);
+    return geometry;
+  }, []);
+
+  const materials = useMemo(
+    () => [
+      new MeshLambertMaterial({ color: "red" }),
+      new MeshLambertMaterial({ color: "chocolate" }),
+      new MeshLambertMaterial({ color: "white" }),
+      new MeshLambertMaterial({ color: "gold" }),
+      new MeshLambertMaterial({ color: "green" }),
+      new MeshLambertMaterial({ color: "blue" }),
+    ],
+    []
+  );
+
+  const selectedMaterial = useMemo(
+    () => new MeshLambertMaterial({ color: "hotpink" }),
+    []
+  );
 
   const cubies = useMemo(() => {
     console.log("Cubies were re-created");
@@ -16,7 +39,14 @@ const RubikCube = ({ position = [0, 0, 0], dimension = 1 }, cubeRef) => {
         for (let z = -axisLimit; z <= axisLimit; z++) {
           // Check if cubie is visible --> Refactor into util function?
           if ([x, y, z].some((coord) => Math.abs(coord) === axisLimit)) {
-            arr.push(<Cubie position={[x, y, z]} />);
+            arr.push(
+              <Cubie
+                position={[x, y, z]}
+                geometry={boxGeometry}
+                material={materials}
+                selectionMaterial={selectedMaterial}
+              />
+            );
           }
         }
       }

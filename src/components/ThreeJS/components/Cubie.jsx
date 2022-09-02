@@ -1,15 +1,13 @@
 /* eslint-disable react/prop-types */
 import React, { useRef, useState } from "react";
-import { Box, Edges } from "@react-three/drei";
+import { Edges } from "@react-three/drei";
 
-export const Cubie = ({ ...props }) => {
+export const Cubie = ({ geometry, material, selectionMaterial, ...props }) => {
   const cubieRef = useRef();
   const [hovered, hover] = useState(false);
 
-  console.log("cubie was re-rendered");
-
   return (
-    <Box
+    <mesh
       {...props}
       ref={cubieRef}
       onPointerOver={(event) => {
@@ -17,9 +15,10 @@ export const Cubie = ({ ...props }) => {
         hover(true);
       }}
       onPointerOut={() => hover(false)}
+      geometry={geometry}
+      material={hovered ? selectionMaterial : material}
     >
-      <meshPhongMaterial color={hovered ? "hotpink" : "orange"} />
       <Edges />
-    </Box>
+    </mesh>
   );
 };

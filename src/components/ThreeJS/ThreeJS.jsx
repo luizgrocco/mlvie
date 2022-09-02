@@ -21,6 +21,8 @@ export const ThreeJS = () => {
   const cameraRef = useRef();
   const cubeRef = useRef();
 
+  const valueLabelFormat = (value) => `${value * 2}%`;
+
   const onChangeCubeDimension = (_event, dimension) => {
     if (typeof dimension === "number") {
       setCubeDimension(dimension);
@@ -78,11 +80,12 @@ export const ThreeJS = () => {
             valueLabelDisplay="auto"
             min={0}
             max={50}
+            valueLabelFormat={valueLabelFormat}
             value={cubeSpacing}
             onChange={onChangeSpacing}
           />
           <Typography sx={{ marginLeft: "10px", color: "white" }}>
-            {`Spacing (${cubeSpacing})`}
+            {`Spacing (${cubeSpacing * 2}%)`}
           </Typography>
         </Grid>
         <Grid>
@@ -94,7 +97,7 @@ export const ThreeJS = () => {
           makeDefault
           position={DEFAULT_CAMERA_POSITION}
           near={0.1}
-          far={25}
+          far={100}
           ref={cameraRef}
         />
         <OrbitControls />
