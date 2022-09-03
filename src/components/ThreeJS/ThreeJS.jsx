@@ -1,7 +1,12 @@
 import React, { useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Cube } from "./components";
-import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
+import {
+  OrbitControls,
+  PerspectiveCamera,
+  Stats,
+  Environment,
+} from "@react-three/drei";
 import { Button, Grid, Slider, Typography } from "@mui/material";
 import { useState } from "react";
 
@@ -17,23 +22,35 @@ const DEFAULT_CAMERA_POSITION = [5, 5, 10];
 
 export const ThreeJS = () => {
   const [cubeDimension, setCubeDimension] = useState(1);
-  const [cubeSpacing, setCubeSpacing] = useState(0);
   const cameraRef = useRef();
   const cubeRef = useRef();
+  const cubeSpacingRef = useRef(0);
 
   const valueLabelFormat = (value) => `${value * 2}%`;
 
   const onChangeCubeDimension = (_event, dimension) => {
+    // TODO: Optimize this
     if (typeof dimension === "number") {
       setCubeDimension(dimension);
-      setCubeSpacing(0);
+      cubeSpacingRef.current = 0;
     }
   };
 
   const onChangeSpacing = (_event, spacing) => {
     if (typeof spacing === "number") {
       const adjustedSpacing = 1 + spacing / 50;
-      const adjustedCubeSpacing = 1 + cubeSpacing / 50;
+      const adjustedCubeSpacing = 1 + cubeSpacingRef.current / 50;
+
+      // cubeRef.current.children?.forEach((cubie) => {
+      //   cubie.position.x =
+      //     (cubie.position.x / adjustedCubeSpacing) * adjustedSpacing;
+      //   cubie.position.y =
+      //     (cubie.position.y / adjustedCubeSpacing) * adjustedSpacing;
+      //   cubie.position.z =
+      //     (cubie.position.z / adjustedCubeSpacing) * adjustedSpacing;
+      // });
+      // cubeRef.current.instanceMatrix.needsUpdate = true;
+
       cubeRef.current.children?.forEach((cubie) => {
         cubie.position.set(
           (cubie.position.x / adjustedCubeSpacing) * adjustedSpacing,
@@ -41,7 +58,8 @@ export const ThreeJS = () => {
           (cubie.position.z / adjustedCubeSpacing) * adjustedSpacing
         );
       });
-      setCubeSpacing(spacing);
+
+      cubeSpacingRef.current = spacing;
     }
   };
 
@@ -64,7 +82,7 @@ export const ThreeJS = () => {
             sx={{ minWidth: "300px", width: "300px", color: "orange" }}
             valueLabelDisplay="auto"
             min={1}
-            max={20}
+            max={50}
             value={cubeDimension}
             onChange={onChangeCubeDimension}
           />
@@ -81,12 +99,11 @@ export const ThreeJS = () => {
             min={0}
             max={50}
             valueLabelFormat={valueLabelFormat}
-            value={cubeSpacing}
             onChange={onChangeSpacing}
           />
-          <Typography sx={{ marginLeft: "10px", color: "white" }}>
-            {`Spacing (${cubeSpacing * 2}%)`}
-          </Typography>
+          {/* <Typography sx={{ marginLeft: "10px", color: "white" }}>
+            {`Spacing (${cubeSpacingRef.current * 2}%)`}
+          </Typography> */}
         </Grid>
         <Grid>
           <Button onClick={onClickResetCamera}>Reset Camera</Button>
@@ -97,15 +114,19 @@ export const ThreeJS = () => {
           makeDefault
           position={DEFAULT_CAMERA_POSITION}
           near={0.1}
-          far={100}
+          far={1000}
           ref={cameraRef}
         />
+        <Stats />
         <OrbitControls />
         <ambientLight intensity={0.6} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
         <pointLight position={[-10, -10, -10]} />
 
-        <Cube position={[0, 0, 0]} dimension={cubeDimension} ref={cubeRef} />
+        <React.Suspense fallback={null}>
+          <Environment background={true} preset="forest" />
+          <Cube position={[0, 0, 0]} dimension={cubeDimension} ref={cubeRef} />
+        </React.Suspense>
       </Canvas>
     </>
   );
