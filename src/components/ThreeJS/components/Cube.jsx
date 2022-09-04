@@ -1,7 +1,13 @@
 /* eslint-disable react/prop-types */
 import { useFrame } from "@react-three/fiber";
 import React, { forwardRef, useMemo } from "react";
-import { BoxGeometry, MeshLambertMaterial, Color } from "three";
+import {
+  BoxGeometry,
+  MeshLambertMaterial,
+  Color,
+  EdgesGeometry,
+  LineBasicMaterial,
+} from "three";
 import { Instances, Instance } from "@react-three/drei";
 
 const CUBE_COLORS = ["red", "chocolate", "white", "gold", "green", "blue"];
@@ -14,6 +20,8 @@ const FACE_MATERIALS = CUBE_COLORS.map((color) => {
   material.color = new Color(color);
   return material;
 });
+const EDGES_GEOMETRY = new EdgesGeometry(BOX_GEOMETRY);
+const EDGES_MATERIAL = new LineBasicMaterial({ color: 0xffff00 });
 
 const RubikCube = ({ position = [0, 0, 0], dimension = 1 }, cubeRef) => {
   console.log("Cube was re-rendered");
@@ -74,19 +82,22 @@ const RubikCube = ({ position = [0, 0, 0], dimension = 1 }, cubeRef) => {
     //   material={FACE_MATERIALS}
     //   args={[null, null, 1000]}
     // ></instancedMesh>
+    <>
+      <Instances
+        position={position}
+        limit={50000} // Optional: max amount of items (for calculating buffer size)
+        range={50000} // Optional: draw-range
+        geometry={BOX_GEOMETRY}
+        material={FACE_MATERIALS}
+        ref={cubeRef}
+      >
+        {positions.map((pos, i) => (
+          <Instance position={pos} key={i} />
+        ))}
+      </Instances>
 
-    <Instances
-      position={position}
-      limit={50000} // Optional: max amount of items (for calculating buffer size)
-      range={50000} // Optional: draw-range
-      geometry={BOX_GEOMETRY}
-      material={FACE_MATERIALS}
-      ref={cubeRef}
-    >
-      {positions.map((pos, i) => (
-        <Instance position={pos} key={i} />
-      ))}
-    </Instances>
+      <instancedBufferGeometry></instancedBufferGeometry>
+    </>
   );
 };
 
