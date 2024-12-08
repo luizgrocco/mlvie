@@ -4,7 +4,6 @@ import { useDebounce } from "react-use";
 import CanvasDraw from "react-canvas-draw";
 import { CircularProgress, Typography, Badge, Grid } from "@mui/material";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import { Box } from "@mui/system";
 
 export const MachineLearning = () => {
   const [model, setModel] = useState(null);
@@ -30,7 +29,7 @@ export const MachineLearning = () => {
 
   // Hooks
   const predict = useCallback(async () => {
-    await tf.tidy(() => {
+    tf.tidy(() => {
       if (!model) {
         setIsLoading(false);
         return;
@@ -119,12 +118,6 @@ export const MachineLearning = () => {
       </Grid>
       <Grid className="prediction-container">
         <Grid className="prediction-header">
-          <Box
-            component="img"
-            src="assets/images/tensorflow_logo.png"
-            alt="tensorflow-logo"
-            className="tf-logo"
-          />
           <Typography className="predict">Prediction:</Typography>
           {isLoading && (
             <CircularProgress className="circular-progress" color="inherit" />
@@ -162,3 +155,12 @@ export const MachineLearning = () => {
     </Grid>
   );
 };
+
+{
+  /* <Box
+component="img"
+src="assets/images/tensorflow_logo.png"
+alt="tensorflow-logo"
+className="tf-logo"
+/> */
+}
